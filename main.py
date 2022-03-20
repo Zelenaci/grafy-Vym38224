@@ -28,42 +28,57 @@ class Application(tk.Tk):
         self.bind("<Escape>", self.quit)
         self.lbl = tk.Label(self, text="Graf")
         self.lbl.pack()
-        self.btn = tk.Button(self, text="Quit", command=self.quit)
-        self.btn.pack()
+        self.lbl2 = tk.Label(self, text="Nastavení frekvence:")
+        self.lbl2.pack()   
+        self.f = Entry(self)
+        self.f.pack()
+        self.f.focus_set()
+        def frekvence():
+            try:
+                f1 = open("frekvence.txt", "w")
+            except FileNotFoundError:
+                print("Soubor nebyl nalezen")
+
+            text = (self.f.get())
+            f1.write(text)
+            print(self.f.get())
+            f1.close()
+        self.btn3 = tk.Button(self, text="zapiš", command=frekvence)
+        self.btn3.pack()
         self.btn2 = tk.Button(self, text="ukaž graf", command=self.graf)
         self.btn2.pack()
+        self.btn = tk.Button(self, text="Quit", command=self.quit)
+        self.btn.pack()
+        self.hodnoty = []
+
         
-       
-
-
-
     def graf(self):
-
-        index = self.f.curselection()[0]
-        self.lines = f.readlines()
-
-        f = open("soubor-ux.txt", "r")
-        slovnik = {}
-        for line in f:
-            slovnik[line.split()[0]] = (line.split()[1:])
-        
-        print(slovnik)
-
-        t = np.linspace(y,x,z) #Čas
-        f = 50                    #Hz
-        u = np.cos(2*pi*f*t)      #Napětí
-        plt.plot(t,u, c="r", linewidth=2)
+        #Čas
+        f2 = open("soubor-win.txt", "r")
+        radky = f2.readlines()
+        x = [float(line.split()[0]) for line in radky]
+        self.hodnoty.append(x)
+        for radek in self.hodnoty:
+                zacatek = radek[0]
+                konec = radek[-1]
+        x = np.linspace(zacatek, konec,len(radky))
+        f2.close      
+        #Frekvence
+        f1 = open("frekvence.txt", "r")         
+        f = f1.read()
+        f = np.int16(f)                         
+        f1.close()
+        #Napětí                           
+        u = np.cos(2*pi*f*x)
+        #plot     
+        plt.plot(x,u, c="r", linewidth=2)
         plt.grid()
         plt.ylabel("napětí[V]")
         plt.xlabel("čas[s]")
         plt.title("Cosinus")
         plt.show()
 
-
-
-
-
-
+        
     def quit(self, event=None):
         super().quit()
 
