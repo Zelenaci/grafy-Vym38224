@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import pylab as pl
+import pylab as plt
 import tkinter as tk
 
 from pylab import linspace, pi, plot,sin,cos, show,grid,legend
@@ -15,36 +15,56 @@ class Application(tk.Tk):
 
     def __init__(self):
         super().__init__(className=self.name)
+        self.var_entryE = tk.IntVar()
+        self.var_entryS = tk.IntVar()
+        self.var_entryF = tk.IntVar()
+        self.var_entryA = tk.IntVar()
         self.title(self.name)
         self.bind("<Escape>", self.quit)
-        self.lbl = tk.Label(self, text="Graf")
+        self.lbl = tk.Label(self, text="Graf ze souboru", font=7)
         self.lbl.pack()
-        self.lbl2 = tk.Label(self, text="Nastavení frekvence:")
-        self.lbl2.pack()   
-        self.entry = Entry(self)
-        self.entry.pack()
-        self.entry.focus_set()
-        def frekvence():
-            try:
-                f1 = open("frekvence.txt", "w")
-            except FileNotFoundError:
-                print("Soubor nebyl nalezen")
-
-            text = (self.entry.get())
-            f1.write(text)
-            print(self.entry.get())
-            f1.close()
-        self.btn3 = tk.Button(self, text="zapiš", command=frekvence)
+        self.btn2 = tk.Button(self, text="Načíst ze souboru", command=self.grafsoubor)
+        self.btn2.pack()
+        self.lbl1 = tk.Label(self, text="Cosinus", font=7)
+        self.lbl1.pack()
+        self.lblS = tk.Label(self, text=u"Počáteční čas:") 
+        self.lblS.pack(anchor=SW)
+        self.entryS  = tk.Entry(self, textvariable = self.var_entryS, width = 15, justify=CENTER)
+        self.entryS.pack()  
+        self.lblE = tk.Label(self, text=u"Koncový čas:")
+        self.lblE.pack(anchor=W)
+        self.entryE  = tk.Entry(self, textvariable = self.var_entryE, width = 15, justify=CENTER)
+        self.entryE.pack()
+        self.lblF = tk.Label(self, text=u"Frekvence:")
+        self.lblF.pack(anchor=W)
+        self.entryF  = tk.Entry(self, textvariable = self.var_entryF, width = 15, justify=CENTER)
+        self.entryF.pack()
+        self.lblA = tk.Label(self, text=u"Amplituda:")
+        self.lblA.pack(anchor=W)
+        self.entryA  = tk.Entry(self, textvariable = self.var_entryA, width = 15, justify=CENTER)
+        self.entryA.pack()
+        self.btn3 = tk.Button(self, text="Načíst graf", command=self.graf)
         self.btn3.pack()
-        self.btn2 = tk.Button(self, text="ukaž graf", command=self.grafsoubor)
-        self.btn2.pack() 
-        self.btn = tk.Button(self, text="Quit", command=self.quit)
+        self.btn = tk.Button(self, text="Konec", command=self.quit)
         self.btn.pack()
 
-    def quit(self, event=None):
-        super().quit()
+    def graf(self):
+        self.start = self.var_entryS.get()
+        self.end = self.var_entryE.get()
+        self.frekvence = self.var_entryF.get()
+        self.amplituda = self.var_entryA.get()
         
+        
+        t = plt.linspace(self.start, 10/self.frekvence, self.frekvence*10000)
+        x = self.amplituda * (plt.cos(2*pi*self.frekvence*t ))
 
+        plt.plot(t,x)
+        plt.title("Cosinus")
+        plt.xlabel("t[s]")
+        plt.ylabel("u[V]")
+        plt.grid()
+        plt.show()
+    
         
     def grafsoubor(self):
         f = open("soubor-win.txt", "r")
@@ -58,32 +78,19 @@ class Application(tk.Tk):
             x.append(float(cisla[0]))
             y.append(float(cisla[1]))
         f.close()
-        pl.figure()
-        pl.plot(x,y)
-        pl.grid(True)
-        pl.show()
+        plt.figure()
+        plt.plot(x,y)
+        plt.grid(True)
+        plt.show()
         
         
         
         
+def quit(self, event=None):
+        super().quit()
 
 
-
-    def graf(self):
-        #Frekvence
-        f1 = open("frekvence.txt", "r")         
-        f = f1.read()
-        f = np.int16(f)                         
-        f1.close()
-        #Napětí                           
-        #u = np.cos(2*pi*f*x)
-        #plot     
-        #plt.plot(x,u, c="r", linewidth=2)
-       #plt.grid()
-        plt.ylabel("napětí[V]")
-        plt.xlabel("čas[s]")
-        plt.title("Cosinus")
-        #plt.show()
+    
 
         
 app = Application()
