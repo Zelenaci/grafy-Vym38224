@@ -27,14 +27,6 @@ class Application(tk.Tk):
         self.btn2.pack()
         self.lbl1 = tk.Label(self, text="Cosinus", font=7)
         self.lbl1.pack()
-        self.lblS = tk.Label(self, text=u"Počáteční čas:") 
-        self.lblS.pack(anchor=SW)
-        self.entryS  = tk.Entry(self, textvariable = self.var_entryS, width = 15, justify=CENTER)
-        self.entryS.pack()  
-        self.lblE = tk.Label(self, text=u"Koncový čas:")
-        self.lblE.pack(anchor=W)
-        self.entryE  = tk.Entry(self, textvariable = self.var_entryE, width = 15, justify=CENTER)
-        self.entryE.pack()
         self.lblF = tk.Label(self, text=u"Frekvence:")
         self.lblF.pack(anchor=W)
         self.entryF  = tk.Entry(self, textvariable = self.var_entryF, width = 15, justify=CENTER)
@@ -49,13 +41,12 @@ class Application(tk.Tk):
         self.btn.pack()
 
     def graf(self):
-        self.start = self.var_entryS.get()
-        self.end = self.var_entryE.get()
+        
         self.frekvence = self.var_entryF.get()
         self.amplituda = self.var_entryA.get()
         
         
-        t = plt.linspace(self.start, 10/self.frekvence, self.frekvence*10000)
+        t = plt.linspace(1, 10/self.frekvence, self.frekvence*10000)
         x = self.amplituda * (plt.cos(2*pi*self.frekvence*t ))
 
         plt.plot(t,x)
